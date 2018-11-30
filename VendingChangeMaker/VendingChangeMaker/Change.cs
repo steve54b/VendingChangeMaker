@@ -6,8 +6,13 @@ namespace VendingChangeMaker
 {
     class Change
     {
+
         public static string GetChangeMessage()
         {
+            // GetChangeMessage: first calls GetChangeAmount, to determine the change amount,
+            // then calls GetChangeDemonimations, to determine the coin distrubution by
+            // denomination, and, lastly, constructs the message to be displayed to the user
+            //
             int changeAmount = GetChangeAmount(); // request price & payment and return difference
             string changeMessage = "";
             if (changeAmount == 0)
@@ -76,7 +81,7 @@ namespace VendingChangeMaker
         {
             int[] chgArray = new int[4];  // element 0=.25, 1=.10, 2=.05, 2=.01
 
-            // start by change amount by 25, for # of quarters.  If no remainder,
+            // start by dividing change amount by 25, for # of quarters.  If no remainder,
             //  we're done.  Otherwise divide remainder by 10 for # of dimes, then
             //  divide that remainder by 5 for # of nickels, and so forth.
             

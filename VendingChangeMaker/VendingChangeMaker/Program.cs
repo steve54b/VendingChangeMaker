@@ -9,7 +9,7 @@ namespace VendingChangeMaker
         // dispenses change in coins only
 
         //
-        // NEEDS TEST PROGRAM
+        // NEEDS TEST CODE
         //
         // NEEDS EXCEPTION HANDLING
         //
