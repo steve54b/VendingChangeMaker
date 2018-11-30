@@ -8,13 +8,16 @@ namespace VendingChangeMaker
     {
         public static string GetChangeMessage()
         {
-            int changeAmount = GetChangeAmount();
+            int changeAmount = GetChangeAmount(); // request price & payment and return difference
             string changeMessage = "";
             if (changeAmount == 0)
                 changeMessage = "\nYou have made exact change.  Thank you.";
             else
             {
+                // get coin distribution for payout, by denomination
                 int[] chgArray = GetChangeDenominations(changeAmount);
+
+                // convert integer (number of pennies) to string showing dollars & cents
                 int changeDollars = changeAmount / 100;
                 string dollarsString = changeDollars.ToString();
                 int changeCents = changeAmount % 100;
@@ -24,6 +27,8 @@ namespace VendingChangeMaker
                 else
                     centsString = $"{changeCents}";
                 string changeAmountString = $"{changeDollars}.{centsString}";
+
+                // assemble message to display to user
                 changeMessage = $"\nYour change of ${changeAmountString} is being paid as follows:\n" +
                     $"{chgArray[0]} quarter(s), {chgArray[1]} dime(s), {chgArray[2]} nickel(s), and " +
                     $"{chgArray[3]} pennies";
@@ -32,19 +37,20 @@ namespace VendingChangeMaker
             return changeMessage;
         }
 
+        // Requests vending item price & payment, determines change amount due
         public static int GetChangeAmount()
         {
-            UserInterface.DisplayPrompt("\nItem price dollars? ");
+            UserInterface.DisplayPrompt("\nItem price dollars? (no decimals) ");
             int dollars = UserInterface.GetInteger();
             int price = dollars * 100;
-            UserInterface.DisplayPrompt("Item price cents? ");
+            UserInterface.DisplayPrompt("Item price cents? (no decimals) ");
             int cents = UserInterface.GetInteger();
             price += cents;
 
-            UserInterface.DisplayPrompt("Payment dollars? ");
+            UserInterface.DisplayPrompt("Payment dollars? (no decimals) ");
             dollars = UserInterface.GetInteger();
             int amountPaid = dollars * 100;
-            UserInterface.DisplayPrompt("Payment cents? ");
+            UserInterface.DisplayPrompt("Payment cents? (no decimals) ");
             cents = UserInterface.GetInteger();
             amountPaid += cents;
 
@@ -70,11 +76,11 @@ namespace VendingChangeMaker
         {
             int[] chgArray = new int[4];  // element 0=.25, 1=.10, 2=.05, 2=.01
 
-            int result = changeAmount / 100;
-            if (result > 0)
-                chgArray[0] += result * 4;
-            changeAmount = changeAmount % 100;
-            result = changeAmount / 25;
+            // start by change amount by 25, for # of quarters.  If no remainder,
+            //  we're done.  Otherwise divide remainder by 10 for # of dimes, then
+            //  divide that remainder by 5 for # of nickels, and so forth.
+            
+            int result = changeAmount / 25;
             if (result > 0)
                 chgArray[0] += result;
             changeAmount = changeAmount % 25;
